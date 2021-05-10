@@ -12,7 +12,7 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
     Get("/todo/100") ~> WebServer.routes(id => {
       callCounter = callCounter + 1
       callId = id
-      Future.successful(ToDo(id, "n", "desc", done = false))
+      Future.successful(Some(ToDo(id, "n", "desc", done = false)))
     }) ~> check {
       callCounter should be(1)
       callId should be(100)
@@ -22,7 +22,7 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
   "The get route should return the function result" in {
     val result = ToDo(100, "n", "desc", done = false)
 
-    Get("/todo/100") ~> WebServer.routes(_ => Future.successful(result)) ~> check {
+    Get("/todo/100") ~> WebServer.routes(_ => Future.successful(Some(result))) ~> check {
       import ToDoProtocol._
 
       responseAs[ToDo] should be(result)
