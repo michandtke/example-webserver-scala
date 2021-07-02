@@ -1,4 +1,3 @@
-import java.lang.Throwable
 
 import akka.Done
 import akka.actor.ActorSystem
@@ -16,11 +15,14 @@ object WebServer extends Directives with StrictLogging {
   def start(fGet: Function[Int, Future[Option[ToDo]]])(implicit system: ActorSystem): Future[Http.ServerBinding] = {
     val route = routes(fGet)
 
-    val port = sys.env("PORT")
+    val host = "0.0.0.0"
+    val port: Int = sys.env.getOrElse("PORT", "8080").toInt
     logger.error(s"My port: $port")
     println(s"My port: $port")
 
-    Http().newServerAt("localhost", 8080).bind(route)
+    val binding = Http().newServerAt(host, port).bind(route)
+
+    binding.andThen(_ => println(s"Server online at $host:$port\nPress RETURN to stop..."))(system.dispatcher)
   }
 
   def routes(fGet: Function[Int, Future[Option[ToDo]]]): Route = {
