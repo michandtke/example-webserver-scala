@@ -16,7 +16,5 @@ object Main extends App {
 
   val server: Future[Http.ServerBinding] = WebServer.start(Accessor.get(storage, _))
 
-//  StdIn.readLine() // let it run until user presses return
-//  WebServer.terminate(server)
-//    .onComplete(_ => system.terminate())
+//  server.andThen(_ => system.terminate())
 }
