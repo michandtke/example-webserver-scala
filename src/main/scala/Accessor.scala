@@ -1,12 +1,9 @@
 import scala.concurrent.{ExecutionContext, Future}
 
 object Accessor {
-  def create(storage: Storage, value: ToDo): Future[Unit] = storage.put(value)
+  def create(storage: Storage, value: Entity): Future[String] = storage.put(value).map(_ => "Created")(ExecutionContext.global)
 
-  def get(storage: Storage, id: Int): Future[Option[ToDo]] = {
-    storage.get(id).map {
-      case null => None
-      case res => Some(res)
-    }(ExecutionContext.global)
+  def get(storage: Storage, id: Int): Future[Option[Entity]] = {
+    storage.get(id)
   }
 }

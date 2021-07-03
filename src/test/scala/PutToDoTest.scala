@@ -13,7 +13,7 @@ class PutToDoTest extends AnyFlatSpec with should.Matchers {
 
     // when
     Await.ready(Accessor.create(storage, todo), 1.second)
-    val id0: ToDo = Await.result(Accessor.get(storage, id), 1.second).get
+    val id0: Entity = Await.result(Accessor.get(storage, id), 1.second).get
 
     // then
     id0 should be (todo)

@@ -2,6 +2,7 @@
 import akka.Done
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.{Directives, Route}
 import com.typesafe.scalalogging.StrictLogging
 
@@ -12,8 +13,8 @@ object WebServer extends Directives with StrictLogging {
 
   //  def start(fGet: Function[Int, Future[ToDo]],
   //            fPut: Function[ToDo, Future[Unit]])(implicit system: ActorSystem): Future[Http.ServerBinding] = {
-  def start(fGet: Function[Int, Future[Option[ToDo]]])(implicit system: ActorSystem): Future[Http.ServerBinding] = {
-    val route = routes(fGet)
+  def start(fGet: Function[Int, Future[Option[Entity]]], fCreate: Function[Entity, Future[String]])(implicit system: ActorSystem): Future[Http.ServerBinding] = {
+    val route = routes(fGet, fCreate)
 
     val host = "0.0.0.0"
     val port: Int = sys.env.getOrElse("PORT", "8080").toInt
@@ -25,20 +26,44 @@ object WebServer extends Directives with StrictLogging {
     binding.andThen(_ => println(s"Server online at $host:$port\nPress RETURN to stop..."))(system.dispatcher)
   }
 
-  def routes(fGet: Function[Int, Future[Option[ToDo]]]): Route = {
-    val route =
+  def routes(fGet: Function[Int, Future[Option[Entity]]], fCreate: Function[Entity, Future[String]]): Route = {
+    val todos =
       pathPrefix("todo" / IntNumber) { id =>
         get {
-          val result: Future[Option[ToDo]] = fGet(id)
+          val result: Future[Option[Entity]] = fGet(id)
           import ToDoProtocol._
           onComplete(result) {
-            case Success(res) => complete(res)
+            case Success(res: Option[ToDo]) => complete(res)
             case Failure(err) => complete(err.getMessage)
           }
         }
       }
 
-    route
+    import BookProtocol._
+
+    val books =
+      pathPrefix("book" / IntNumber) { id =>
+        get {
+          val result: Future[Option[Entity]] = fGet(id)
+          import BookProtocol._
+          onComplete(result) {
+            case Success(res: Option[Book]) => complete(res)
+            case Failure(err) => complete(err.getMessage)
+          }
+        }
+      } ~
+        path("book" / "add") {
+          put {
+            entity(as[Book]) { book =>
+              onSuccess(fCreate(book)) { result =>
+                complete((StatusCodes.Created, result))
+              }
+            }
+          }
+        }
+
+
+    todos ~ books
   }
 
   def terminate(bindingFuture: Future[Http.ServerBinding])(implicit context: ExecutionContext): Future[Done] = {

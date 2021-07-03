@@ -1,7 +1,7 @@
 import scala.concurrent.Future
 
 trait Storage {
-  def put(stuff: ToDo): Future[Unit]
+  def put(stuff: Entity): Future[Unit]
 
-  def get(id: Int): Future[ToDo]
+  def get(id: Int): Future[Option[Entity]]
 }

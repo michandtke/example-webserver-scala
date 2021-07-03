@@ -3,13 +3,13 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.Future
 
 class TestStorage extends Storage {
-  val map = new ConcurrentHashMap[Int, ToDo]()
+  val map = new ConcurrentHashMap[Int, Entity]()
 
-  override def put(stuff: ToDo): Future[Unit] = {
+  override def put(stuff: Entity): Future[Unit] = {
     Future.successful(map.put(stuff.id, stuff))
   }
 
-  override def get(id: Int): Future[ToDo] = {
-    Future.successful(map.get(id))
+  override def get(id: Int): Future[Option[Entity]] = {
+    Future.successful(Option(map.get(id)))
   }
 }

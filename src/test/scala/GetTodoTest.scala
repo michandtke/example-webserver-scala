@@ -11,7 +11,7 @@ class GetTodoTest extends AnyFlatSpec with should.Matchers {
     val storage = new TestStorage()
 
     // when
-    val id0: Option[ToDo] = Await.result(Accessor.get(storage, id), 1.second)
+    val id0: Option[Entity] = Await.result(Accessor.get(storage, id), 1.second)
 
     // then
     id0 should be (None)
