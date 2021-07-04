@@ -62,8 +62,8 @@ object WebServer extends Directives with StrictLogging {
           }
         }
 
-
-    todos ~ books
+    import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+    cors() {todos ~ books}
   }
 
   def terminate(bindingFuture: Future[Http.ServerBinding])(implicit context: ExecutionContext): Future[Done] = {

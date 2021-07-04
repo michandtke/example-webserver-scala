@@ -11,6 +11,7 @@ libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.6.14"
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.6.14"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.7" % "test"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3"
+libraryDependencies += "ch.megard" %% "akka-http-cors" % "1.1.1"
 
 val AkkaVersion = "2.6.14"
 val AkkaHttpVersion = "10.2.4"
