@@ -13,7 +13,8 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
       callCounter = callCounter + 1
       callId = id
       Future.successful(Some(ToDo(id, "n", "desc", done = false)))
-    }, _ => Future.successful("")) ~> check {
+    }, _ => Future.successful(""),
+      _ => Future.successful(Seq.empty)) ~> check {
       callCounter should be(1)
       callId should be(100)
     }
@@ -22,7 +23,9 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
   "The get route should return the function result" in {
     val result = ToDo(100, "n", "desc", done = false)
 
-    Get("/todo/100") ~> WebServer.routes(_ => Future.successful(Some(result)), _ => Future.successful("")) ~> check {
+    Get("/todo/100") ~> WebServer.routes(_ => Future.successful(Some(result)),
+      _ => Future.successful(""),
+      _ => Future.successful(Seq.empty)) ~> check {
       import ToDoProtocol._
 
       responseAs[ToDo] should be(result)
@@ -32,7 +35,10 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
   "A failed function result should be propagated" in {
     val message = "This is an error. To bad!"
 
-    Get("/todo/100") ~> WebServer.routes(_ => Future.failed(new IllegalArgumentException(message)), _ => Future.successful("")) ~> check {
+    Get("/todo/100") ~> WebServer.routes(
+      _ => Future.failed(new IllegalArgumentException(message)),
+      _ => Future.successful(""),
+      _ => Future.successful(Seq.empty)) ~> check {
       responseAs[String] shouldEqual message
     }
   }

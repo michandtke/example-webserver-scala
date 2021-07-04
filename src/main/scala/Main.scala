@@ -14,7 +14,10 @@ object Main extends App {
   val todo = ToDo(0, "The first one", "This is the first todo for testing purposes. Does the setup work?", done = false)
   Await.ready(storage.put(todo), Duration.Inf)
 
-  val server: Future[Http.ServerBinding] = WebServer.start(Accessor.get(storage, _), Accessor.create(storage, _))
+  val server: Future[Http.ServerBinding] =
+    WebServer.start(Accessor.get(storage, _),
+      Accessor.create(storage, _),
+      Accessor.all(storage, _))
 
 //  server.andThen(_ => system.terminate())
 }
