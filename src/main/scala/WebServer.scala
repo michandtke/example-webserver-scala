@@ -9,6 +9,8 @@ import com.typesafe.scalalogging.StrictLogging
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import Types._
+import akka.http.scaladsl.model.HttpMethods._
+import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 
 object WebServer extends Directives with StrictLogging {
 
@@ -64,8 +66,12 @@ object WebServer extends Directives with StrictLogging {
     }
 
     import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-    cors() {todos ~ books(fGet, fCreate, fAll)}
+    cors(settings) {todos ~ books(fGet, fCreate, fAll)}
   }
+
+  val settings: CorsSettings = CorsSettings
+    .defaultSettings
+    .withAllowedMethods(Seq(GET, PUT, POST, HEAD, OPTIONS, DELETE))
 
   def books(fGet: Function[Int, Future[Option[Entity]]],
             fCreate: Function[Entity, Future[String]],
