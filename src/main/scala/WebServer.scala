@@ -73,6 +73,7 @@ object WebServer extends Directives with StrictLogging {
     .defaultSettings
     .withAllowedMethods(Seq(GET, PUT, POST, HEAD, OPTIONS, DELETE))
 
+
   def books(fGet: Function[Int, Future[Option[Entity]]],
             fCreate: Function[Entity, Future[String]],
             fAll: Function[Types, Future[Seq[Entity]]]): Route = {
@@ -100,7 +101,9 @@ object WebServer extends Directives with StrictLogging {
         } ~
         path("book" / "add") {
           put {
+            logger.info("We have a put request!")
             entity(as[Book]) { book =>
+              logger.info(s"We have a book! $book")
               onSuccess(fCreate(book)) { result =>
                 complete((StatusCodes.Created, result))
               }
