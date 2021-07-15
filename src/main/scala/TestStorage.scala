@@ -18,6 +18,9 @@ class TestStorage extends Storage {
   }
 
   override def all(types: Types): Future[Seq[Entity]] = {
-    Future.successful(map.values().asScala.filter(ent => ent.isInstanceOf).toSeq)
+    types match {
+      case Types.Book => Future.successful(map.values().asScala.filter(ent => ent.isInstanceOf[Book]).toSeq)
+      case Types.Todo => Future.successful(map.values().asScala.filter(ent => ent.isInstanceOf[ToDo]).toSeq)
+    }
   }
 }
