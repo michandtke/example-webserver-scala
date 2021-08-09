@@ -1,4 +1,6 @@
-import Types.Types
+package de.mwa.webserver
+
+import de.mwa.webserver.Types.Types
 
 import scala.concurrent.{ExecutionContext, Future}
 

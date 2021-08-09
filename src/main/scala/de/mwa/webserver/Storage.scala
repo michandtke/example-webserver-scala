@@ -1,7 +1,12 @@
+package de.mwa.webserver
+
+import de.mwa.webserver.Types.Types
+
 import scala.concurrent.Future
-import Types._
 
 trait Storage {
+  def setup(): Future[Unit]
+
   def put(stuff: Entity): Future[Unit]
 
   def get(id: Int): Future[Option[Entity]]

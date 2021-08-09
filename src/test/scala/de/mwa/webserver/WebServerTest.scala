@@ -1,3 +1,5 @@
+package de.mwa.webserver
+
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -26,7 +28,7 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
     Get("/todo/100") ~> WebServer.routes(_ => Future.successful(Some(result)),
       _ => Future.successful(""),
       _ => Future.successful(Seq.empty)) ~> check {
-      import ToDoProtocol._
+      import de.mwa.webserver.ToDoProtocol._
 
       responseAs[ToDo] should be(result)
     }

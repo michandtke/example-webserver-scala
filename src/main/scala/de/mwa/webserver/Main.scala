@@ -1,13 +1,20 @@
+package de.mwa.webserver
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import de.mwa.webserver.books.SlickStorage
+import slick.jdbc.JdbcBackend
+import slick.jdbc.JdbcBackend.Database
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
-import scala.io.StdIn
 
 object Main extends App {
   implicit val system: ActorSystem = ActorSystem("my-system")
+
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
+  implicit val db: JdbcBackend.Database = Database.forConfig("postgres")
 
   val storage = new TestStorage
 
@@ -19,5 +26,5 @@ object Main extends App {
       Accessor.create(storage, _),
       Accessor.all(storage, _))
 
-//  server.andThen(_ => system.terminate())
+  //  server.andThen(_ => system.terminate())
 }

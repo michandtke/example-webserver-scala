@@ -1,12 +1,17 @@
+package de.mwa.webserver
+
+import de.mwa.webserver.books.Book
+import de.mwa.webserver.Types.Types
+
 import java.util.concurrent.ConcurrentHashMap
-
-import Types.Types
-
 import scala.concurrent.Future
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 
 class TestStorage extends Storage {
+
+  override def setup(): Future[Unit] = Future.successful(())
+
   val map = new ConcurrentHashMap[Int, Entity]()
 
   override def put(stuff: Entity): Future[Unit] = {

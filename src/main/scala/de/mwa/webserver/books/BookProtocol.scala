@@ -1,3 +1,5 @@
+package de.mwa.webserver.books
+
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 

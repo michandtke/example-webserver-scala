@@ -1,3 +1,5 @@
+package de.mwa.webserver
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -5,7 +7,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
 class PutToDoTest extends AnyFlatSpec with should.Matchers {
-  "A new ToDo" should "be inserted" in {
+  "A new de.mwa.webserver.ToDo" should "be inserted" in {
     // given
     val id = 0
     val todo = ToDo(id = id, name = "Name", description = "description", done = false)
@@ -16,10 +18,10 @@ class PutToDoTest extends AnyFlatSpec with should.Matchers {
     val id0: Entity = Await.result(Accessor.get(storage, id), 1.second).get
 
     // then
-    id0 should be (todo)
+    id0 should be(todo)
   }
 
-  "A previous ToDo" should "be replaced" in {
+  "A previous de.mwa.webserver.ToDo" should "be replaced" in {
     // given
     val id = 0
     val todo1 = ToDo(id = id, name = "name", description = "desc", done = false)
@@ -32,6 +34,6 @@ class PutToDoTest extends AnyFlatSpec with should.Matchers {
     val result = Await.result(Accessor.get(storage, id), 1.second).get
 
     // then
-    result should be (todo2)
+    result should be(todo2)
   }
 }
