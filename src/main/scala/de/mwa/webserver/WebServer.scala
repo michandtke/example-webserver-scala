@@ -10,8 +10,6 @@ import ch.megard.akka.http.cors.scaladsl.model.HttpOriginMatcher
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import com.typesafe.scalalogging.StrictLogging
 import de.mwa.webserver.Types.Types
-import de.mwa.webserver.books.BookRoutes
-import slick.jdbc.JdbcBackend
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -20,8 +18,9 @@ object WebServer extends Directives with StrictLogging {
 
   def start(fGet: Function[Int, Future[Option[Entity]]],
             fCreate: Function[Entity, Future[String]],
-            fAll: Function[Types, Future[Seq[Entity]]])(implicit system: ActorSystem, db: JdbcBackend.Database): Future[Http.ServerBinding] = {
-    val route = routes(fGet, fCreate, fAll)
+            fAll: Function[Types, Future[Seq[Entity]]],
+            books: Route)(implicit system: ActorSystem): Future[Http.ServerBinding] = {
+    val route = routes(fGet, fCreate, fAll, books)
 
     val host = "0.0.0.0"
     val port: Int = sys.env.getOrElse("PORT", "8080").toInt
@@ -35,7 +34,8 @@ object WebServer extends Directives with StrictLogging {
 
   def routes(fGet: Function[Int, Future[Option[Entity]]],
              fCreate: Function[Entity, Future[String]],
-             fAll: Function[Types, Future[Seq[Entity]]])(implicit db: JdbcBackend.Database): Route = {
+             fAll: Function[Types, Future[Seq[Entity]]],
+             books: Route): Route = {
     import ToDoProtocol._
     val todos = {
       path("todos") {
@@ -69,7 +69,7 @@ object WebServer extends Directives with StrictLogging {
 
     import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
     cors(settings) {
-      todos ~ BookRoutes()
+      todos ~ books
     }
   }
 

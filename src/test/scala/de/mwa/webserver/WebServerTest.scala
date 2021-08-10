@@ -1,5 +1,6 @@
 package de.mwa.webserver
 
+import akka.http.scaladsl.server.RouteResult
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -16,7 +17,8 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
       callId = id
       Future.successful(Some(ToDo(id, "n", "desc", done = false)))
     }, _ => Future.successful(""),
-      _ => Future.successful(Seq.empty)) ~> check {
+      _ => Future.successful(Seq.empty),
+      _ => Future.successful(RouteResult.Rejected(Vector.empty))) ~> check {
       callCounter should be(1)
       callId should be(100)
     }
@@ -27,7 +29,8 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
 
     Get("/todo/100") ~> WebServer.routes(_ => Future.successful(Some(result)),
       _ => Future.successful(""),
-      _ => Future.successful(Seq.empty)) ~> check {
+      _ => Future.successful(Seq.empty),
+      _ => Future.successful(RouteResult.Rejected(Vector.empty))) ~> check {
       import de.mwa.webserver.ToDoProtocol._
 
       responseAs[ToDo] should be(result)
@@ -40,7 +43,8 @@ class WebServerTest extends AnyWordSpec with Matchers with ScalatestRouteTest {
     Get("/todo/100") ~> WebServer.routes(
       _ => Future.failed(new IllegalArgumentException(message)),
       _ => Future.successful(""),
-      _ => Future.successful(Seq.empty)) ~> check {
+      _ => Future.successful(Seq.empty),
+      _ => Future.successful(RouteResult.Rejected(Vector.empty))) ~> check {
       responseAs[String] shouldEqual message
     }
   }

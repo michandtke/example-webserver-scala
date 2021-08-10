@@ -18,9 +18,4 @@ class GetTodoTest extends AnyFlatSpec with should.Matchers {
     // then
     id0 should be (None)
   }
-
-  "A known todo" should "return Some" in {
-    // TODO - Next step
-    true should be (false)
-  }
 }
