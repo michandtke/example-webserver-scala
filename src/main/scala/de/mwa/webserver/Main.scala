@@ -20,6 +20,8 @@ object Main extends App with StrictLogging {
   // implicit val db: JdbcBackend.Database = Database.forConfig("postgres")
   implicit val db: JdbcBackend.Database = Database.forConfig("h2mem1")
 
+  SlickStorage.setup()
+  
   val storage = new TestStorage
   val books = BookRoutes()
 
