@@ -9,11 +9,11 @@ object BookSql extends BookTransfer {
 
   def createBooks: DBIO[Int] =
     sqlu"""create table books(
-      id int not null,
-      title varchar not null,
-      subtitle varchar not null,
-      desc varchar not null,
-      done bool not null)"""
+      id              serial  primary key,
+      title           varchar not null,
+      subtitle        varchar not null,
+      description     varchar not null,
+      done            boolean not null)"""
 
   def getAllBooks: SqlStreamingAction[Vector[Book], Book, Effect] = {
     sql"select * from books".as[Book]

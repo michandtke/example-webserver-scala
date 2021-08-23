@@ -10,7 +10,7 @@ In the future:
 * Database migrations -> evaluate https://flywaydb.org/
 
 Steps to take while copying for a new app:
-* [...]
+* Setup POSTGRES_USER and POSTGRES_PWD in heroku ConfigVars
 * 
 
 
