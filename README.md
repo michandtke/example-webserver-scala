@@ -1,5 +1,6 @@
 Example scala service to copy for new applications
 
+
 * Runs on Heroku
 * CRUD via REST
 * Postgres as the datasource (https://devcenter.heroku.com/articles/heroku-postgresql)
