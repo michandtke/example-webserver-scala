@@ -14,7 +14,8 @@ object Main extends App {
 
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  implicit val db: JdbcBackend.Database = Database.forConfig("postgres")
+  // implicit val db: JdbcBackend.Database = Database.forConfig("postgres")
+  implicit val db: JdbcBackend.Database = Database.forConfig("h2mem1")
 
   val storage = new TestStorage
   val books = BookRoutes()
